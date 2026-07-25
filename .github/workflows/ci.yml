@@ -24,7 +24,11 @@ jobs:
         python -m pip install --upgrade pip
         pip install mlflow scikit-learn pandas numpy
 
+    - name: Start MLflow Tracking Server
+      run: |
+        mlflow server --host 127.0.0.1 --port 5000 &
+        sleep 5
+
     - name: Run MLflow Project
       run: |
         mlflow run MLProject --env-manager=local
-        
