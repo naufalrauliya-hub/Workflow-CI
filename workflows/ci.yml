@@ -1,0 +1,35 @@
+name: MLflow CI Pipeline
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  run-ci:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v4
+
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.12'
+
+    - name: Install MLflow & Dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install mlflow scikit-learn pandas numpy
+
+    - name: Start MLflow Tracking Server
+      run: |
+        mlflow server --host 127.0.0.1 --port 5000 &
+        sleep 5
+
+    - name: Run MLflow Project
+      run: |
+        mlflow run MLProject --env-manager=local --experiment-name "Latihan Credit Scoring Superstore"
+        
